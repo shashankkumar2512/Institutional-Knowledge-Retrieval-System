@@ -1,105 +1,149 @@
-# Institutional Knowledge Retrieval System (IKRS)
+<div align="center">
 
-**TCS LLMOps Capstone · Use Case A**
+# 🎓 Institutional Knowledge Retrieval System (IKRS)
 
-A production-grade RAG system that answers questions about institutional documents (fees, regulations, admissions, hostel, bridge courses) using a fully observable LLMOps pipeline.
+### Production-Grade RAG System for Institutional Question Answering
 
----
+**TCS LLMOps Capstone – Use Case A**
 
-## Architecture
+[![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react)](https://react.dev/)
+[![LangChain](https://img.shields.io/badge/LangChain-LCEL-green)](https://www.langchain.com/)
+[![Gemini](https://img.shields.io/badge/Google-Gemini%202.0%20Flash-blue)](https://ai.google.dev/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-pgvector-336791?logo=postgresql)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker)](https://docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-```
-PDF Corpus (50+ docs)
-       │
-       ▼
-   Chunking (RecursiveCharacterTextSplitter — 1000 tokens, 200 overlap)
-       │
-       ▼
-   Embeddings (sentence-transformers/all-MiniLM-L6-v2)
-       │
-       ▼
-   pgvector (PostgreSQL vector store)
-       │
-   Query ──► Guardrails ──► Retrieval (cosine similarity, k=3)
-                                  │
-                                  ▼
-                          LangChain LCEL Chain
-                          (PromptTemplate v2 → Gemini 2.0 Flash)
-                                  │
-                    ┌─────────────┴─────────────┐
-                    ▼                           ▼
-              Langfuse tracing           SQLite cost tracker
-                    │                           │
-                    └─────────────┬─────────────┘
-                                  ▼
-                           FastAPI backend
-                                  │
-                                  ▼
-                        React frontend (this)
-```
+*A production-ready Retrieval-Augmented Generation (RAG) platform that answers institutional queries using semantic search, LangChain LCEL, pgvector, Gemini 2.0 Flash, and complete LLMOps observability.*
+
+</div>
 
 ---
 
-## Tech Stack
+# 📖 Overview
+
+IKRS is an enterprise-style **Retrieval-Augmented Generation (RAG)** application developed as part of the **TCS LLMOps Capstone**.
+
+Instead of relying solely on an LLM, the system retrieves relevant institutional documents from a vector database and uses them to generate accurate, grounded, and hallucination-resistant answers.
+
+The project demonstrates an end-to-end **LLMOps pipeline**, including:
+
+- Document ingestion
+- Semantic chunking
+- Vector embeddings
+- PostgreSQL pgvector retrieval
+- LangChain LCEL orchestration
+- Gemini 2.0 Flash generation
+- Langfuse observability
+- Prompt versioning
+- Cost tracking
+- Evaluation framework
+- Guardrails against unsafe prompts
+
+---
+
+# ✨ Key Features
+
+- 📄 PDF document ingestion pipeline
+- ✂️ Automatic document chunking
+- 🧠 Semantic embeddings using MiniLM
+- 🔍 Vector similarity search using pgvector
+- 🤖 Gemini 2.0 Flash powered responses
+- ⚡ LangChain LCEL orchestration
+- 📊 Langfuse tracing & observability
+- 💰 Token usage & cost dashboard
+- 🧪 Golden dataset evaluation
+- 🛡 Prompt injection detection
+- 🚫 Out-of-domain query rejection
+- 📈 Prompt version comparison
+- 🐳 Docker deployment
+
+---
+
+# 🏗 Architecture
+
+```text
+                         +-----------------------+
+                         | Institutional PDFs    |
+                         +----------+------------+
+                                    |
+                                    v
+                     Recursive Character Chunking
+                                    |
+                                    v
+                   MiniLM Sentence Transformer Embeddings
+                                    |
+                                    v
+                     PostgreSQL + pgvector Vector Store
+                                    |
+                     User Question
+                                    |
+                                    v
+                     Retrieval (Top-K Semantic Search)
+                                    |
+                                    v
+                 Guardrails & Prompt Validation Layer
+                                    |
+                                    v
+              LangChain LCEL + Prompt Template (v2)
+                                    |
+                                    v
+                    Gemini 2.0 Flash Large Language Model
+                                    |
+             +----------------------+------------------+
+             |                                         |
+             v                                         v
+     Langfuse Tracing                     SQLite Cost Tracker
+             |                                         |
+             +----------------------+------------------+
+                                    |
+                                    v
+                             FastAPI REST API
+                                    |
+                                    v
+                           React + Vite Frontend
+```
+
+---
+
+# 🛠 Technology Stack
 
 | Layer | Technology |
-|-------|------------|
-| Embeddings | `sentence-transformers/all-MiniLM-L6-v2` |
-| Vector store | pgvector (PostgreSQL extension) |
-| RAG framework | LangChain LCEL |
-| LLM | Gemini 2.0 Flash (gemini-2.0-flash) |
-| Observability | Langfuse |
-| Backend API | FastAPI + Uvicorn |
+|--------|------------|
 | Frontend | React + Vite |
-| Cost tracking | SQLite (`cost_usage.db`) |
-| Containerisation | Docker + Docker Compose |
+| Backend | FastAPI |
+| LLM | Gemini 2.0 Flash |
+| Framework | LangChain LCEL |
+| Embeddings | sentence-transformers MiniLM |
+| Vector Database | PostgreSQL + pgvector |
+| Observability | Langfuse |
+| Cost Tracking | SQLite |
+| Containerization | Docker |
+| Evaluation | Golden Dataset + LLM-as-Judge |
 
 ---
 
-## Project Structure
+# 📂 Project Structure
 
-```
-TCS/
-├── backend/
-│   ├── src/
-│   │   ├── api.py              # FastAPI endpoints
-│   │   ├── rag_chain.py        # LangChain LCEL RAG pipeline
-│   │   ├── rag_core.py         # Core RAG logic (pgvector)
-│   │   ├── guardrails.py       # Injection, OOB, length, confidence guards
-│   │   ├── cost_tracker.py     # SQLite token/cost logger
-│   │   ├── langfuse_logger.py  # Langfuse client
-│   │   ├── chunking.py         # PDF → chunks pipeline
-│   │   ├── embeddings.py       # sentence-transformers embedding pipeline
-│   │   ├── vector_store.py     # pgvector search
-│   │   ├── load_to_pgvector.py # Bulk insert embeddings → PostgreSQL
-│   │   ├── database.py         # psycopg2 connection helper
-│   │   ├── ingestion.py        # PDF ingestion & metadata
-│   │   ├── retrieval.py        # Standalone retrieval script
-│   │   └── answer_evaluator.py # LLM-as-judge evaluation
-│   ├── evaluation/
-│   │   ├── golden_dataset.json      # 20-question reference set
-│   │   ├── retrieval_results.json   # 85% retrieval accuracy results
-│   │   ├── evaluate.py              # Full evaluation runner
-│   │   ├── retrieval_evaluate.py    # Retrieval-only evaluation
-│   │   └── run_evaluation.py        # Convenience entry-point
-│   ├── prompts/
-│   │   ├── prompt_v1.txt       # Initial prompt
-│   │   └── prompt_v2.txt       # Improved prompt (+16pp faithfulness)
-│   ├── data/processed/
-│   │   ├── chunks.json         # Pre-chunked document corpus
-│   │   └── metadata.json       # Chunk metadata
-│   ├── docs/
-│   │   └── daily_log.md        # Development log
-│   ├── app.py                  # Streamlit UI (alternative to React)
-│   ├── requirements.txt
-│   └── Dockerfile
-├── frontend/
-│   ├── src/
-│   │   ├── App.jsx             # Main React application
-│   │   └── main.jsx            # Entry point
-│   ├── index.html
+```text
+IKRS
+│
+├── backend
+│   ├── src
+│   ├── evaluation
+│   ├── prompts
+│   ├── data
+│   ├── docs
+│   ├── Dockerfile
+│   └── requirements.txt
+│
+├── frontend
+│   ├── src
+│   ├── public
 │   ├── package.json
 │   └── vite.config.js
+│
 ├── docker-compose.yml
 ├── .env.example
 └── README.md
@@ -107,101 +151,242 @@ TCS/
 
 ---
 
-## Quick Start
+# 🚀 Installation
 
-### 1. Clone & configure
+## Clone Repository
 
 ```bash
-git clone https://github.com/sushobhan16/TCS.git
-cd TCS
-cp .env.example .env
-# Fill in GOOGLE_API_KEY, LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY, DB_*
+git clone https://github.com/YOUR_USERNAME/IKRS.git
+
+cd IKRS
 ```
 
-### 2. Start PostgreSQL with pgvector
+---
+
+## Configure Environment
+
+```bash
+cp .env.example .env
+```
+
+Configure:
+
+```
+GOOGLE_API_KEY=
+LANGFUSE_PUBLIC_KEY=
+LANGFUSE_SECRET_KEY=
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
+```
+
+---
+
+## Start PostgreSQL
 
 ```bash
 docker-compose up -d db
 ```
 
-### 3. Build vector store
+---
+
+## Install Backend
 
 ```bash
 cd backend
+
 pip install -r requirements.txt
-python src/chunking.py          # chunk PDFs
-python src/embeddings.py        # generate embeddings
-python src/load_to_pgvector.py  # load into PostgreSQL
 ```
 
-### 4. Start FastAPI backend
+---
+
+## Build Vector Database
 
 ```bash
-uvicorn src.api:app --reload --port 8000
+python src/chunking.py
+
+python src/embeddings.py
+
+python src/load_to_pgvector.py
 ```
 
-### 5. Start React frontend
+---
+
+## Start Backend
+
+```bash
+uvicorn src.api:app --reload
+```
+
+---
+
+## Start Frontend
 
 ```bash
 cd frontend
+
 npm install
+
 npm run dev
-# Open http://localhost:3000
 ```
 
 ---
 
-## API Endpoints
+# 📡 REST API
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/query` | RAG query — guardrails → retrieval → generation |
-| `GET`  | `/health` | Liveness check |
-| `GET`  | `/dashboard/today` | Today's token + cost summary |
-| `GET`  | `/dashboard/daily` | Last 30 days breakdown |
-| `GET`  | `/dashboard/total` | All-time totals |
-| `GET`  | `/dashboard/recent-queries` | Last N queries |
-| `POST` | `/evaluate` | Trigger background evaluation |
-| `GET`  | `/evaluate/status` | Poll evaluation status |
-| `GET`  | `/evaluate/results` | Per-question results |
-| `GET`  | `/prompts` | List prompt versions |
-| `GET`  | `/prompts/{version}` | Get prompt content |
+|----------|--------------------------|----------------------------|
+| POST | /query | Ask institutional question |
+| GET | /health | Health check |
+| GET | /dashboard/today | Today's usage |
+| GET | /dashboard/daily | Last 30 days |
+| GET | /dashboard/total | Overall statistics |
+| GET | /dashboard/recent-queries | Recent questions |
+| POST | /evaluate | Run evaluation |
+| GET | /evaluate/results | Evaluation report |
+| GET | /prompts | Prompt versions |
 
 ---
 
-## Guardrails
+# 🛡 Guardrails
 
-| Guard | Trigger | Latency |
-|-------|---------|---------|
-| Length limiter | Query > 500 chars | ~15ms |
-| Injection guard | Pattern match (jailbreak strings) | ~38ms |
-| Out-of-scope filter | Non-institutional keyword match | ~42ms |
-| Confidence threshold | Similarity score < 0.30 | ~50ms |
+✔ Prompt Injection Detection
 
----
+✔ Confidence Threshold Filtering
 
-## Evaluation Results
+✔ Query Length Validation
 
-| Metric | Prompt v1 | Prompt v2 | Delta |
-|--------|-----------|-----------|-------|
-| Faithfulness | 72% | 88% | +16pp |
-| Relevance | 68% | 85% | +17pp |
-| Retrieval hit@3 | 80% | 85% | +5pp |
-| Guardrail precision | 91% | 97% | +6pp |
+✔ Out-of-Scope Detection
+
+✔ Safe Response Generation
 
 ---
 
-## TCS Capstone Deliverables
+# 📊 Evaluation Results
 
-- [x] Public GitHub repository with complete application and evaluation suite
-- [x] Golden-dataset evaluation report showing performance across iterations
-- [x] Langfuse trace export demonstrating end-to-end observability
-- [x] Recorded demonstration including out-of-scope query and prompt injection attempt
-- [x] React frontend covering all required technology stack integrations
-- [x] Cost governance dashboard (daily cost, tokens, cost-per-query)
-- [x] Prompt versioning under Git with evaluation impact tracking
-- [x] Guardrails: injection detection, OOB rejection, token limits, confidence threshold
+| Metric | Prompt V1 | Prompt V2 |
+|---------|-----------|-----------|
+| Faithfulness | 72% | **88%** |
+| Relevance | 68% | **85%** |
+| Retrieval Hit@3 | 80% | **85%** |
+| Guardrail Precision | 91% | **97%** |
 
 ---
 
-*Prepared for TCS Industry Engagement – Academic Partnership Programme*
+# 📈 LLMOps Capabilities
+
+- End-to-End RAG Pipeline
+- LangChain LCEL
+- Prompt Versioning
+- Golden Dataset Evaluation
+- Langfuse Observability
+- Cost Governance
+- Docker Deployment
+- Semantic Retrieval
+- pgvector Integration
+- Enterprise Guardrails
+
+---
+
+# 📷 Screenshots
+
+## Home Page
+
+> Add screenshot here
+
+```
+screenshots/home.png
+```
+
+---
+
+## Query Interface
+
+> Add screenshot here
+
+```
+screenshots/chat.png
+```
+
+---
+
+## Langfuse Dashboard
+
+> Add screenshot here
+
+```
+screenshots/langfuse.png
+```
+
+---
+
+## Cost Dashboard
+
+> Add screenshot here
+
+```
+screenshots/dashboard.png
+```
+
+---
+
+# 📹 Demo
+
+Add your demo video here.
+
+Example:
+
+```
+https://youtu.be/your-demo-video
+```
+
+---
+
+# 🎯 Future Improvements
+
+- Hybrid Search (BM25 + Vector)
+- Reranking using Cross Encoder
+- Multi-document citations
+- Authentication & Role Management
+- Streaming Responses
+- Kubernetes Deployment
+- CI/CD using GitHub Actions
+- Monitoring with Prometheus & Grafana
+
+---
+
+# 👨‍💻 Author
+
+**Shashank Kumar**
+
+Final Year B.Tech (Computer Science Engineering)
+
+SOA ITER, Bhubaneswar
+
+GitHub:
+https://github.com/shashankkumar2512
+
+LinkedIn:
+https://linkedin.com/in/your-linkedin
+
+---
+
+# ⭐ If you found this project useful
+
+Please consider giving it a ⭐ on GitHub.
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.
+
+---
+
+<div align="center">
+
+Built with ❤️ using FastAPI, React, LangChain, Gemini & PostgreSQL.
+
+</div>
