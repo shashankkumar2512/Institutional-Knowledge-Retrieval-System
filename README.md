@@ -294,7 +294,8 @@ npm run dev
 
 ## Home Page
 
-> Add screenshot here
+<img width="1918" height="968" alt="home" src="https://github.com/user-attachments/assets/90825b5c-9acf-4a85-b49a-bcd8dbdcbd0b" />
+
 
 ```
 screenshots/home.png
