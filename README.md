@@ -305,7 +305,8 @@ screenshots/home.png
 
 ## Query Interface
 
-> Add screenshot here
+<img width="1913" height="970" alt="chat" src="https://github.com/user-attachments/assets/3331ac28-15bd-4c7a-a708-8c006fb668fa" />
+
 
 ```
 screenshots/chat.png
@@ -315,7 +316,8 @@ screenshots/chat.png
 
 ## Langfuse Dashboard
 
-> Add screenshot here
+<img width="1919" height="968" alt="langfuse" src="https://github.com/user-attachments/assets/5b3639b1-e484-426a-989c-d5bc427c478a" />
+
 
 ```
 screenshots/langfuse.png
@@ -325,22 +327,11 @@ screenshots/langfuse.png
 
 ## Cost Dashboard
 
-> Add screenshot here
+<img width="1919" height="973" alt="dashboard" src="https://github.com/user-attachments/assets/d1dbc0d2-e4c7-40b7-8c03-439de2425fab" />
+
 
 ```
 screenshots/dashboard.png
-```
-
----
-
-# 📹 Demo
-
-Add your demo video here.
-
-Example:
-
-```
-https://youtu.be/your-demo-video
 ```
 
 ---
