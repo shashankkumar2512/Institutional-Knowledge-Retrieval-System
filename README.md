@@ -361,7 +361,7 @@ GitHub:
 https://github.com/shashankkumar2512
 
 LinkedIn:
-https://linkedin.com/in/your-linkedin
+https://www.linkedin.com/in/shashank-kumar25/
 
 ---
 
